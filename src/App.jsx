@@ -91,7 +91,7 @@ const RAW_USERS = [
 
 
 function computeMetrics(u) {
-  const drDenom = 0.4 * u.svipDays + 0.2 * u.vipDays;
+  const drDenom = 0.5 * u.svipDays + 0.3 * u.vipDays;
   const dr = drDenom > 0 ? u.recharge / drDenom : 0;
   const tr = u.traffic > 0 ? u.recharge / (u.traffic * 0.1) : 0;
   const drHigh = dr >= 1;
@@ -364,18 +364,18 @@ export default function ArbitrageSentinel() {
                 </th>
                 <SortHeader label="总充值金额" k="recharge" sort={sort} toggle={toggleSort} />
                 <SortHeader label="流量使用"  k="traffic"  sort={sort} toggle={toggleSort} />
-                <SortHeader label="DR" k="dr" sort={sort} toggle={toggleSort}
+                <SortHeader label="会员付费密度" k="dr" sort={sort} toggle={toggleSort}
                   popover={<InfoPopover
-                    title="DR · 会员付费密度"
-                    formula="DR = 累计净充值 ÷ (0.4×SVIP天数 + 0.2×VIP天数)"
+                    title="会员付费密度（DR）"
+                    formula="DR = 累计净充值 ÷ (0.5×SVIP天数 + 0.3×VIP天数)"
                     unit="无量纲比值，≥ 1 为健康"
-                    example={<>用户 A 充值 <span className="tnum">¥100</span>，SVIP <span className="tnum">120</span> 天 + VIP <span className="tnum">60</span> 天<br/>分母 = 0.4×120 + 0.2×60 = <span className="tnum">60</span><br/>→ DR = <span className="tnum" style={{ fontWeight: 500 }}>1.67</span> ✓</>}
+                    example={<>用户 A 充值 <span className="tnum">¥100</span>，SVIP <span className="tnum">120</span> 天 + VIP <span className="tnum">60</span> 天<br/>分母 = 0.5×120 + 0.3×60 = <span className="tnum">78</span><br/>→ DR = <span className="tnum" style={{ fontWeight: 500 }}>1.28</span> ✓</>}
                     threshold={<>健康阈值：<span className="tnum">≥ 1.00</span><br/>低于 1 = 充值不足预期，可能存在套利</>}
                   />}
                 />
-                <SortHeader label="TR" k="tr" sort={sort} toggle={toggleSort}
+                <SortHeader label="流量付费密度" k="tr" sort={sort} toggle={toggleSort}
                   popover={<InfoPopover
-                    title="TR · 流量付费密度"
+                    title="流量付费密度（TR）"
                     formula="TR = 累计净充值 ÷ (累计流量 GB × 0.1)"
                     unit="无量纲比值，≥ 1 为健康"
                     example={<>用户 A 充值 <span className="tnum">¥100</span>，使用 <span className="tnum">500 GB</span><br/>分母 = 500 × 0.1 = <span className="tnum">50</span><br/>→ TR = <span className="tnum" style={{ fontWeight: 500 }}>2.00</span> ✓</>}
@@ -412,18 +412,16 @@ export default function ArbitrageSentinel() {
                       </div>
                     </td>
                     <td className="px-3 py-3.5" style={{ fontSize: 12 }}>
-                      {u.svipDays > 0 && (
-                        <div className="tnum flex items-center gap-1">
+                      <div className="tnum flex items-center gap-3">
+                        <div className="flex items-center gap-1">
                           <span style={{ color: '#6d28d9', fontWeight: 600, fontSize: 11, background: '#ede9fe', borderRadius: 4, padding: '1px 5px' }}>SVIP</span>
                           <span style={{ color: '#52525b' }}>{u.svipDays}d</span>
                         </div>
-                      )}
-                      {u.vipDays > 0 && (
-                        <div className="tnum flex items-center gap-1" style={{ marginTop: u.svipDays > 0 ? 2 : 0 }}>
+                        <div className="flex items-center gap-1">
                           <span style={{ color: '#b45309', fontWeight: 600, fontSize: 11, background: '#fef3c7', borderRadius: 4, padding: '1px 5px' }}>VIP</span>
                           <span style={{ color: '#52525b' }}>{u.vipDays}d</span>
                         </div>
-                      )}
+                      </div>
                     </td>
                     <td className="px-3 py-3.5 tnum" style={{ fontSize: 13, color: '#18181b', fontWeight: 500 }}>
                       {u.recharge}
