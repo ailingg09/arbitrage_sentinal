@@ -128,7 +128,7 @@ function computeMetrics(u) {
 // MAIN
 // ─────────────────────────────────────────────────────────────────────────────
 export default function ArbitrageSentinel() {
-  const [lang, setLang] = useState('en');
+  const [lang, setLang] = useState('zh');
   const [users, setUsers] = useState(RAW_USERS);
   const [activePanel, setActivePanel] = useState('membership');
   const [selectedUser, setSelectedUser] = useState(null);
@@ -542,7 +542,8 @@ export default function ArbitrageSentinel() {
                 const tb = TIER_BADGE[u.tier] ?? { bg: '#f4f4f5', color: '#52525b' };
                 return (
                   <tr key={u.id} className="row-hover"
-                    style={{ borderTop: '1px solid #f4f4f5', background: batchMode && selectedIds.has(u.id) ? '#fafafa' : undefined }}
+                    style={{ borderTop: '1px solid #f4f4f5', background: batchMode && selectedIds.has(u.id) ? '#fafafa' : undefined, cursor: batchMode ? 'default' : 'pointer' }}
+                    onClick={() => { if (!batchMode) setSelectedUser(u); }}
                   >
                     {batchMode && (
                       <td className="px-3 py-3.5" onClick={e => { e.stopPropagation(); toggleSelect(u.id); }}>
